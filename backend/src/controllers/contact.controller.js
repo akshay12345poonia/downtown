@@ -1,10 +1,28 @@
 const Contact = require('../models/Contact.model');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/AppError');
+const { sendEmail } = require('../utils/email');
 
 // Submit contact form
 exports.createContact = catchAsync(async (req, res, next) => {
   const contact = await Contact.create(req.body);
+
+  // Fire-and-forget email to site admin (do not block response if fails)
+  const adminEmail = process.env.CONTACT_EMAIL || process.env.EMAIL_USER;
+  if (adminEmail) {
+    sendEmail({
+      to: adminEmail,
+      subject: `New contact message from ${contact.name}`,
+      text: `Name: ${contact.name}\nEmail: ${contact.email}\nPhone: ${contact.phone || 'N/A'}\nSubject: ${
+        contact.subject || 'N/A'
+      }\n\nMessage:\n${contact.message}`,
+      html: `<p><strong>Name:</strong> ${contact.name}</p>
+             <p><strong>Email:</strong> ${contact.email}</p>
+             <p><strong>Phone:</strong> ${contact.phone || 'N/A'}</p>
+             <p><strong>Subject:</strong> ${contact.subject || 'N/A'}</p>
+             <p><strong>Message:</strong><br/>${contact.message}</p>`
+    }).catch(() => {});
+  }
 
   res.status(201).json({
     status: 'success',

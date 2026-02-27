@@ -4,6 +4,7 @@ const helmet = require('helmet');
 
 const requestLogger = require('./src/middleware/logger.middleware');
 const { notFound, globalErrorHandler } = require('./src/middleware/error.middleware');
+const { apiLimiter, authLimiter } = require('./src/middleware/rateLimit.middleware');
 const authRoutes = require('./src/routes/auth.routes');
 const propertyRoutes = require('./src/routes/property.routes');
 const testimonialRoutes = require('./src/routes/testimonial.routes');
@@ -22,10 +23,11 @@ const app = express();
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
+app.use('/api', apiLimiter);
 app.use(requestLogger);
 
 // Mount routes
-app.use('/api/v1/auth', authRoutes);
+app.use('/api/v1/auth', authLimiter, authRoutes);
 app.use('/api/v1/properties', propertyRoutes);
 app.use('/api/v1/testimonials', testimonialRoutes);
 app.use('/api/v1/agents', agentRoutes);
