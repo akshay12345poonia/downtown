@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { NavLink, Link, useNavigate } from "react-router-dom";
 import { ChevronDown, ArrowRight, User } from "lucide-react";
-import logo from "../assets/logo1.png";
+import logo1 from "../assets/logo1.png"; // white logo
+import logo2 from "../assets/logo2.png"; // gray/dark logo
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -32,35 +33,39 @@ const Navbar = () => {
     navigate("/");
   };
 
+  // Dynamic link class
   const linkClass = ({ isActive }) =>
-    `relative px-3 py-2 text-sm font-medium transition-all duration-300
-     ${
-       isActive
-         ? "text-blue-600 after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-full after:bg-blue-600"
-         : "text-gray-700 hover:text-blue-600"
-     }`;
+    `relative px-3 py-2 text-sm font-medium transition-all duration-300 ${
+      isScrolled
+        ? isActive
+          ? "text-blue-600"
+          : "text-gray-700 hover:text-blue-600"
+        : isActive
+        ? "text-white"
+        : "text-white hover:text-gray-200"
+    }`;
 
   return (
     <header
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
         isScrolled
-          ? "bg-white/80 backdrop-blur-md shadow-md py-3"
+          ? "bg-white/90 backdrop-blur-md shadow-md py-3"
           : "bg-transparent py-5"
       }`}
     >
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-6">
-
+        
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2">
-          <img src={logo} alt="logo" className="h-12 w-25" />
-          {/* <span className="text-xl font-semibold text-gray-800">
-            SilverBrick
-          </span> */}
+          <img
+            src={isScrolled ? logo2 : logo1}
+            alt="logo"
+            className="h-12 w-auto transition-all duration-300"
+          />
         </Link>
 
         {/* Nav Links */}
         <ul className="hidden md:flex items-center gap-6">
-
           <li>
             <NavLink to="/" className={linkClass}>
               Home
@@ -85,7 +90,13 @@ const Navbar = () => {
             onMouseEnter={() => setCompanyOpen(true)}
             onMouseLeave={() => setCompanyOpen(false)}
           >
-            <button className="flex items-center gap-1 text-sm font-medium text-gray-700 hover:text-blue-600 transition">
+            <button
+              className={`flex items-center gap-1 text-sm font-medium transition ${
+                isScrolled
+                  ? "text-gray-700 hover:text-blue-600"
+                  : "text-white hover:text-gray-200"
+              }`}
+            >
               Company
               <ChevronDown
                 className={`w-4 h-4 transition-transform duration-300 ${
@@ -101,16 +112,16 @@ const Navbar = () => {
                   : "opacity-0 invisible -translate-y-2"
               }`}
             >
-              <Link to="/team" className="block px-4 py-2 text-gray-600 hover:bg-gray-100 hover:text-black">
+              <Link to="/team" className="block px-4 py-2 text-gray-600 hover:bg-gray-100">
                 Our Team
               </Link>
-              <Link to="/agent" className="block px-4 py-2 text-gray-600 hover:bg-gray-100 hover:text-black">
+              <Link to="/agent" className="block px-4 py-2 text-gray-600 hover:bg-gray-100">
                 Our Agent
               </Link>
-              <Link to="/career" className="block px-4 py-2 text-gray-600 hover:bg-gray-100 hover:text-black">
+              <Link to="/career" className="block px-4 py-2 text-gray-600 hover:bg-gray-100">
                 Career
               </Link>
-              <Link to="/investor" className="block px-4 py-2 text-gray-600 hover:bg-gray-100 hover:text-black">
+              <Link to="/investor" className="block px-4 py-2 text-gray-600 hover:bg-gray-100">
                 Investor
               </Link>
             </div>
@@ -125,17 +136,19 @@ const Navbar = () => {
 
         {/* Right Section */}
         <div className="hidden md:flex items-center gap-4 relative">
-
           {!isLoggedIn ? (
             <>
               <Link
                 to="/signin"
-                className="text-sm font-medium text-gray-700 hover:text-blue-600 transition"
+                className={`text-sm font-medium transition ${
+                  isScrolled
+                    ? "text-gray-700 hover:text-blue-600"
+                    : "text-white hover:text-gray-200"
+                }`}
               >
                 Sign In
               </Link>
 
-              {/* Animated Get Started Button */}
               <Link
                 to="/signup"
                 className="group flex items-center gap-2 bg-blue-600 text-white px-5 py-2 rounded-full text-sm font-semibold shadow-md transition-all duration-300 hover:bg-blue-700"
@@ -146,7 +159,6 @@ const Navbar = () => {
             </>
           ) : (
             <>
-              {/* User Icon */}
               <button
                 onClick={() => setProfileOpen(!profileOpen)}
                 className="w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 transition"
@@ -154,7 +166,6 @@ const Navbar = () => {
                 <User className="w-5 h-5 text-gray-700" />
               </button>
 
-              {/* Profile Dropdown */}
               <div
                 className={`absolute right-0 top-14 w-48 bg-white shadow-lg rounded-md py-2 transition-all duration-300 ${
                   profileOpen
@@ -178,7 +189,6 @@ const Navbar = () => {
             </>
           )}
         </div>
-
       </nav>
     </header>
   );

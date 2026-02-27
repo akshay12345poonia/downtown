@@ -1,7 +1,10 @@
 import React from "react";
 import Vill1 from "../assets/reginasphotos-beach-villas-1591442_1920.jpg";
+import { useNavigate } from "react-router-dom";
 
 const HeroSection = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="relative h-screen w-full overflow-hidden">
       
@@ -33,11 +36,11 @@ const HeroSection = () => {
 
         {/* Buttons */}
         <div className="flex flex-col sm:flex-row gap-5 mt-10">
-          <button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-full font-semibold shadow-lg transition duration-300">
+          <button onClick={() => navigate("/properties")} className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-full font-semibold shadow-lg transition duration-300">
             Explore Properties
           </button>
 
-          <button className="border border-white text-white px-8 py-3 rounded-full font-semibold hover:bg-white hover:text-black transition duration-300">
+          <button onClick={() => navigate("/booking")} className="border border-white text-white px-8 py-3 rounded-full font-semibold hover:bg-white hover:text-black transition duration-300">
             Book A Consultant
           </button>
         </div>
