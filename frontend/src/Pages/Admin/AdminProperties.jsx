@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { Plus, Pencil, Trash2, X, Building2, AlertTriangle, CheckCircle2, Star, MapPin, Search, Filter } from 'lucide-react';
-import { getProperties, createProperty, updateProperty, deleteProperty } from '../../Services/api';
+import { getProperties, createProperty, updateProperty, deleteProperty } from '../../Services/Api';
 
 const EMPTY = { title: '', description: '', price: '', location: '', bedrooms: 0, bathrooms: 0, area: 0, type: 'for-sale', propertyType: 'house', status: 'available', featured: false, images: [] };
 

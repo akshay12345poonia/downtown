@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Building2, Users, TrendingUp, CheckCircle, XCircle, Home, ArrowRight, Activity, Zap } from 'lucide-react';
-import { getProperties, getAgents } from '../../Services/Api';
+import { getProperties, getAgents, getAdminStats } from '../../Services/Api';
 
 const AdminDashboard = () => {
     const navigate = useNavigate();

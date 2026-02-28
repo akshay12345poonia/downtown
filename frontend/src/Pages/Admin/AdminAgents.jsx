@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { Plus, Pencil, Trash2, Users, AlertTriangle, CheckCircle2, X, Search, Mail, Phone, ExternalLink } from 'lucide-react';
-import { getAgents, createAgent, updateAgent, deleteAgent } from '../../Services/api';
+import { getAgents, createAgent, updateAgent, deleteAgent } from '../../Services/Api';
 
 const EMPTY = { name: '', title: '', email: '', phone: '', bio: '', photo: '', languages: [], specialties: [], isActive: true, socials: { website: '', linkedin: '', instagram: '', twitter: '' } };
 

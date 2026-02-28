@@ -134,7 +134,7 @@ const Signup = () => {
                 <input
                   name="name"
                   className="form-input ml-2"
-                  placeholder="John Doe"
+                  placeholder="Enter Your Name"
                   required
                   value={formData.name}
                   onChange={handleChange}
@@ -151,7 +151,7 @@ const Signup = () => {
                     name="email"
                     type="email"
                     className="form-input ml-2"
-                    placeholder="john@example.com"
+                    placeholder="email@example.com"
                     required
                     value={formData.email}
                     onChange={handleChange}
