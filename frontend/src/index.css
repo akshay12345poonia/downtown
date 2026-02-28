@@ -1,1 +1,172 @@
 @import "tailwindcss";
+
+@theme {
+  --color-brand: #2563eb;
+  --color-brand-light: #eff6ff;
+  --color-brand-dark: #1e40af;
+  --color-accent: #f59e0b;
+  --color-accent-light: #fffbeb;
+  --color-accent-dark: #b45309;
+  --color-success: #10b981;
+  --color-danger: #ef4444;
+  --color-surface: #ffffff;
+  --color-surface-muted: #f8fafc;
+  --color-border: #e2e8f0;
+  --color-text: #0f172a;
+  --color-text-muted: #64748b;
+
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+
+  --shadow-card: 0 4px 20px -2px rgba(0, 0, 0, 0.08);
+  --shadow-card-hover: 0 12px 30px -4px rgba(0, 0, 0, 0.12);
+
+  --radius-xl: 12px;
+  --radius-2xl: 16px;
+  --radius-3xl: 24px;
+}
+
+@utility btn {
+  @apply inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl font-semibold text-sm transition-all duration-300 active:scale-95 disabled:opacity-50 disabled:pointer-events-none;
+}
+
+@utility btn-primary {
+  @apply bg-brand text-white shadow-lg shadow-brand/20 hover:bg-brand-dark hover:shadow-brand/30 hover:-translate-y-0.5;
+}
+
+@utility btn-outline {
+  @apply border-2 border-border text-text hover:border-brand hover:text-brand bg-transparent hover:bg-brand-light;
+}
+
+@utility btn-secondary {
+  @apply bg-surface-muted text-text hover:bg-slate-200;
+}
+
+@utility btn-gold {
+  @apply bg-accent text-white shadow-lg shadow-accent/20 hover:bg-accent-dark hover:shadow-accent/30 hover:-translate-y-0.5;
+}
+
+@utility btn-lg {
+  @apply px-8 py-3.5 text-base;
+}
+
+@utility btn-sm {
+  @apply px-4 py-1.5 text-xs;
+}
+
+@utility card {
+  @apply bg-surface border border-border/60 rounded-2xl shadow-card transition-all duration-500 hover:shadow-card-hover hover:-translate-y-1 overflow-hidden;
+}
+
+@utility badge {
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] uppercase tracking-wider font-bold;
+}
+
+@utility badge-blue {
+  @apply bg-brand-light text-brand;
+}
+
+@utility badge-gold {
+  @apply bg-accent-light text-accent-dark;
+}
+
+@utility badge-red {
+  @apply bg-red-50 text-red-600;
+}
+
+@utility badge-gray {
+  @apply bg-slate-100 text-slate-600;
+}
+
+@utility section {
+  @apply py-20 px-6;
+}
+
+@utility section-tag {
+  @apply inline-block mb-3 px-3 py-1 bg-brand/10 text-brand text-[10px] font-bold uppercase tracking-[0.2em] rounded-md;
+}
+
+@utility section-title {
+  @apply text-3xl md:text-4xl font-black text-text mb-4 leading-tight;
+}
+
+@utility section-subtitle {
+  @apply text-text-muted text-lg max-w-2xl leading-relaxed;
+}
+
+@utility grid-3 {
+  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8;
+}
+
+@utility input-group {
+  @apply flex items-center bg-surface border-2 border-border rounded-xl px-4 py-2.5 transition-all duration-300 focus-within:border-brand focus-within:shadow-lg focus-within:shadow-brand/10;
+}
+
+@utility form-input {
+  @apply w-full bg-transparent border-none outline-none text-sm text-text placeholder:text-text-muted;
+}
+
+@utility form-label {
+  @apply block text-xs font-bold text-text-muted uppercase tracking-wider mb-2 ml-1;
+}
+
+@utility spinner {
+  @apply w-10 h-10 border-4 border-brand/20 border-t-brand rounded-full animate-spin;
+}
+
+@utility property-card {
+  @apply card flex flex-col;
+}
+
+@utility property-card-body {
+  @apply p-6;
+}
+
+@utility property-price {
+  @apply text-2xl font-black text-brand mb-1;
+}
+
+@utility property-title {
+  @apply text-lg font-bold text-text line-clamp-1 mb-2;
+}
+
+@utility property-location {
+  @apply flex items-center gap-1.5 text-text-muted text-sm mb-4;
+}
+
+@utility property-meta {
+  @apply flex items-center justify-between pt-4 border-t border-border/60;
+}
+
+@utility property-meta-item {
+  @apply flex items-center gap-1.5 text-[13px] text-text-muted font-medium;
+}
+
+@keyframes slowZoom {
+  0% {
+    transform: scale(1.1);
+  }
+
+  100% {
+    transform: scale(1.2);
+  }
+}
+
+@keyframes fadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeUp {
+  animation: fadeUp 0.8s ease forwards;
+}
+
+.animate-slowZoom {
+  animation: slowZoom 20s linear infinite alternate;
+}

@@ -6,46 +6,57 @@ const HeroSection = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="relative h-screen w-full overflow-hidden">
-      
+    <section className="relative h-screen w-full overflow-hidden">
+
       {/* Background Image */}
       <img
         src={Vill1}
         alt="Luxury Villa"
-        className="w-full h-full object-cover scale-105 hover:scale-110 transition-transform duration-[4000ms]"
+        className="absolute inset-0 w-full h-full object-cover scale-110 animate-[slowZoom_20s_linear_infinite]"
       />
 
-      {/* Dark Premium Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/70 flex flex-col items-center justify-center text-center px-6">
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-black/80 via-black/60 to-black/80 flex items-center justify-center text-center px-6">
 
-        {/* Small Tagline */}
-        <p className="uppercase tracking-[4px] text-sm md:text-base text-gray-300 mb-4">
-          Premium Real Estate
-        </p>
+        <div className="max-w-4xl mx-auto">
 
-        {/* Main Heading */}
-        <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white leading-tight max-w-4xl">
-          Find Your <span className="text-blue-500">Dream Property</span>
-        </h1>
+          {/* Tagline */}
+          <p className="uppercase tracking-[5px] text-xs md:text-sm text-gray-300 mb-6 animate-fadeUp">
+            Premium Real Estate
+          </p>
 
-        {/* Description */}
-        <p className="text-gray-200 text-base md:text-lg max-w-2xl mt-6">
-          Discover extraordinary homes and investment opportunities with our expert
-          team of trusted real estate professionals.
-        </p>
+          {/* Heading */}
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold text-white leading-tight animate-fadeUp">
+            Find Your{" "}
+            <span className="text-blue-500">Dream Property</span>
+          </h1>
 
-        {/* Buttons */}
-        <div className="flex flex-col sm:flex-row gap-5 mt-10">
-          <button onClick={() => navigate("/properties")} className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-full font-semibold shadow-lg transition duration-300">
-            Explore Properties
-          </button>
+          {/* Description */}
+          <p className="text-gray-300 text-base md:text-lg mt-6 max-w-2xl mx-auto animate-fadeUp">
+            Discover extraordinary homes and investment opportunities with our
+            expert team of trusted real estate professionals.
+          </p>
 
-          <button onClick={() => navigate("/booking")} className="border border-white text-white px-8 py-3 rounded-full font-semibold hover:bg-white hover:text-black transition duration-300">
-            Book A Consultant
-          </button>
+          {/* Buttons */}
+          <div className="flex flex-col sm:flex-row gap-6 mt-10 justify-center animate-fadeUp">
+            <button
+              onClick={() => navigate("/properties")}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-full font-semibold shadow-xl hover:shadow-blue-500/30 transition-all duration-300"
+            >
+              Explore Properties
+            </button>
+
+            <button
+              onClick={() => navigate("/booking")}
+              className="border border-white text-white px-8 py-3 rounded-full font-semibold hover:bg-white hover:text-black transition-all duration-300"
+            >
+              Book A Consultant
+            </button>
+          </div>
+
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

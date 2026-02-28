@@ -1,106 +1,160 @@
-import React from "react";
-import { FaShieldAlt, FaHome, FaUsers, FaGoogle } from "react-icons/fa";
+import React, { useState } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Mail, Lock, ArrowRight, Home, ShieldCheck, AlertCircle } from 'lucide-react';
+import { useAuth } from '../Context/AuthContext';
+import { login } from '../Services/Api';
 
 const Signin = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const { login } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || '/';
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+
+    try {
+      const res = await signin({ email, password });
+      login(res.data.data.user, res.data.token);
+      navigate(from, { replace: true });
+    } catch (err) {
+      setError(err.response?.data?.message || 'Invalid email or password');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
-      <div className="w-full max-w-6xl bg-white rounded-2xl shadow-xl grid grid-cols-1 lg:grid-cols-2 overflow-hidden">
-
-        {/* LEFT CONTENT */}
-        <div className="hidden lg:flex flex-col justify-center px-16">
-          <h1 className="text-2xl font-semibold text-gray-900">
-            Silver Brick
-          </h1>
-
-          <h2 className="mt-6 text-4xl font-bold text-gray-900 leading-tight">
-            Your Next Move <br /> Starts Here
-          </h2>
-
-          <p className="mt-6 text-gray-600 max-w-md leading-relaxed">
-            Access your saved properties, manage inquiries, and explore
-            verified real estate opportunities tailored just for you.
-          </p>
-
-          <div className="mt-10 space-y-4 text-sm text-gray-700">
-            <div className="flex items-center gap-3">
-              <FaUsers className="text-blue-600" />
-              <span>10K+ Happy Customers</span>
-            </div>
-
-            <div className="flex items-center gap-3">
-              <FaHome className="text-blue-600" />
-              <span>500+ Verified Properties</span>
-            </div>
-
-            <div className="flex items-center gap-3">
-              <FaShieldAlt className="text-blue-600" />
-              <span>100% Secure Transactions</span>
-            </div>
-          </div>
-
-          <p className="mt-12 text-sm text-gray-500">
-            Sign in and pick up where you left off.
-          </p>
+    <div className="min-h-screen bg-surface flex selection:bg-brand selection:text-white">
+      {/* Left Decoration - Desktop Only */}
+      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-text">
+        <div className="absolute inset-0 z-0 opacity-40">
+          <img
+            src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1200&q=80"
+            className="w-full h-full object-cover animate-slowZoom"
+            alt="Real Estate"
+          />
+          <div className="absolute inset-0 bg-gradient-to-br from-brand via-transparent to-transparent" />
         </div>
 
-        {/* RIGHT FORM */}
-        <div className="flex items-center justify-center px-6 py-12">
-          <div className="w-full max-w-md">
-            <h3 className="text-xl font-semibold text-gray-900">
-              Sign In to Your Account
-            </h3>
+        <div className="relative z-10 w-full p-20 flex flex-col justify-between">
+          <Link to="/" className="flex items-center gap-3">
+            <div className="w-12 h-12 bg-surface rounded-2xl flex items-center justify-center shadow-2xl">
+              <Home size={24} className="text-brand" />
+            </div>
+            <span className="font-black text-3xl tracking-tighter text-white">SilverBrick</span>
+          </Link>
 
-            <p className="mt-2 text-sm text-gray-600">
-              Glad to see you again.
+          <div>
+            <div className="w-16 h-1 w-20 bg-brand rounded-full mb-8" />
+            <h2 className="text-6xl font-black text-white leading-none mb-8">
+              Welcome Back to <br />
+              <span className="text-brand">Excellence.</span>
+            </h2>
+            <p className="text-xl text-white/50 max-w-md leading-relaxed">
+              Log in to access your saved properties, communicate with your agent, and manage your real estate portfolio.
             </p>
+          </div>
 
-            <form className="mt-8 space-y-5">
-              <input
-                type="email"
-                placeholder="Email Address"
-                className="w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-
-              <input
-                type="password"
-                placeholder="Password"
-                className="w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-
-              <button
-                type="submit"
-                className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition"
-              >
-                Continue
-              </button>
-            </form>
-
-            <div className="flex items-center gap-4 my-6">
-              <div className="flex-1 h-px bg-gray-200" />
-              <span className="text-xs text-gray-400">or</span>
-              <div className="flex-1 h-px bg-gray-200" />
-            </div>
-
-            <button className="w-full flex items-center justify-center gap-3 border py-3 rounded-lg text-sm font-medium hover:bg-gray-50 transition">
-              <FaGoogle />
-              Continue with Google
-            </button>
-
-            <div className="mt-6 text-center text-sm text-gray-600 space-y-3">
-              <a href="/forgotpassword" className="hover:underline">
-                Forgot password?
-              </a>
-
-              <p>
-                Don’t have an account?{" "}
-                <a href="/signup" className="font-medium text-blue-600 hover:underline">
-                  Create one
-                </a>
-              </p>
-            </div>
+          <div className="flex items-center gap-4 text-white/40 text-sm font-bold uppercase tracking-[0.2em]">
+            <ShieldCheck size={20} className="text-brand" />
+            Secure & Encrypted Dashboard
           </div>
         </div>
+      </div>
 
+      {/* Right Form Container */}
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 md:p-16 lg:p-24 bg-white">
+        <div className="w-full max-w-md">
+          {/* Mobile Logo */}
+          <div className="lg:hidden flex justify-center mb-12">
+            <Link to="/" className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-brand rounded-xl flex items-center justify-center">
+                <Home size={20} className="text-white" />
+              </div>
+              <span className="font-black text-2xl tracking-tighter text-text">SilverBrick</span>
+            </Link>
+          </div>
+
+          <div className="mb-10">
+            <h1 className="text-3xl font-black text-text mb-3">Sign In</h1>
+            <p className="text-text-muted">Enter your credentials to access your account.</p>
+          </div>
+
+          {error && (
+            <div className="mb-8 p-4 bg-red-50 border border-red-100 rounded-2xl flex items-center gap-3 text-red-600 text-sm animate-fadeUp">
+              <AlertCircle size={18} />
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div>
+              <label className="form-label">Email Address</label>
+              <div className="input-group">
+                <Mail size={18} className="text-text-muted" />
+                <input
+                  type="email"
+                  className="form-input ml-2"
+                  placeholder="name@email.com"
+                  autoComplete="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div>
+              <div className="flex items-center justify-between mb-2 px-1">
+                <label className="form-label mb-0">Password</label>
+                <Link to="/forgotpassword" size="sm" className="text-xs font-bold text-brand hover:underline">
+                  Forgot?
+                </Link>
+              </div>
+              <div className="input-group">
+                <Lock size={18} className="text-text-muted" />
+                <input
+                  type="password"
+                  className="form-input ml-2"
+                  placeholder="••••••••"
+                  autoComplete="current-password"
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              className="btn btn-primary w-full py-4 text-base shadow-xl"
+              disabled={loading}
+            >
+              {loading ? (
+                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              ) : (
+                <>Sign In <ArrowRight size={18} /></>
+              )}
+            </button>
+          </form>
+
+          <div className="mt-12 text-center">
+            <p className="text-sm text-text-muted">
+              Don't have an account yet?
+              <Link to="/signup" className="ml-2 font-black text-brand hover:underline">
+                Create Account
+              </Link>
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );
