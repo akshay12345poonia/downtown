@@ -25,7 +25,6 @@ export const AuthProvider = ({ children }) => {
     setLoading(false);
   }, []);
 
-  // ✅ token FIRST, user SECOND
   const login = (tokenVal, userData) => {
     localStorage.setItem('token', tokenVal);
     localStorage.setItem('user', JSON.stringify(userData));
@@ -40,8 +39,16 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
+  // Update user data in context (e.g. after profile update)
+  const updateUser = (userData) => {
+    const merged = { ...user, ...userData };
+    localStorage.setItem('user', JSON.stringify(merged));
+    setUser(merged);
+  };
+
   const isAdmin = user?.role === 'admin';
   const isAgent = user?.role === 'agent';
+  const isSeller = user?.role === 'seller';
   const isLoggedIn = Boolean(token);
 
   return (
@@ -51,8 +58,10 @@ export const AuthProvider = ({ children }) => {
         token,
         login,
         logout,
+        updateUser,
         isAdmin,
         isAgent,
+        isSeller,
         isLoggedIn,
         loading
       }}

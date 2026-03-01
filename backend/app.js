@@ -21,11 +21,20 @@ const adminRoutes = require('./src/routes/admin.routes');
 const app = express();
 
 // Global middlewares
-app.use(helmet());
-app.use(cors());
+app.use(helmet({
+    crossOriginResourcePolicy: false,
+}));
+app.use(cors({
+    origin: '*', // Allow all origins for development
+    methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
 app.use('/api', apiLimiter);
 app.use(requestLogger);
+
+// Serve uploaded files (agent photos, property images, user avatars)
+app.use('/uploads', require('express').static(require('path').join(__dirname, 'uploads')));
 
 // Mount routes
 app.use('/api/v1/auth', authLimiter, authRoutes);

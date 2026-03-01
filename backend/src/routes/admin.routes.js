@@ -9,5 +9,7 @@ router.use(protect);
 router.use(restrictTo('admin'));
 
 router.get('/stats', adminController.getAdminStats);
+router.get('/users', adminController.getUsers);
+router.patch('/users/:id/role', adminController.updateUserRole);
 
 module.exports = router;

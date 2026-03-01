@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MapPin, Bed, Bath, Maximize, ArrowRight, Star, TrendingUp, Home, Users, Award } from 'lucide-react';
-import { getProperties, getAgents } from '../Services/Api';
+import { getProperties, getAgents, mediaUrl } from '../Services/Api';
 import SilverBrickAdvantage from '../Components/SilverBrickAdvantage';
 import Testimonials from '../Components/Testimonials';
 import CTA from '../Components/CTA';
@@ -38,7 +38,7 @@ const PropertyCard = ({ prop, onClick }) => (
   <div className="property-card group cursor-pointer" onClick={onClick}>
     <div className="relative overflow-hidden h-64">
       <img
-        src={prop.images?.[0] || PLACEHOLDER_IMG}
+        src={mediaUrl(prop.images?.[0]) || PLACEHOLDER_IMG}
         alt={prop.title}
         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
       />
@@ -71,7 +71,7 @@ const AgentCard = ({ agent, onClick }) => (
   <div className="card group cursor-pointer" onClick={onClick}>
     <div className="relative overflow-hidden h-72">
       <img
-        src={agent.photo || AGENT_PLACEHOLDER}
+        src={mediaUrl(agent.photo) || AGENT_PLACEHOLDER}
         alt={agent.name}
         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
       />
@@ -200,7 +200,7 @@ const HomePage = () => {
         </div>
       </section>
 
-      <SilverBrickAdvantage/>
+      <SilverBrickAdvantage />
 
       {/* Agents Section */}
       <section className="section bg-white">
@@ -233,10 +233,10 @@ const HomePage = () => {
       </section>
 
       {/* Testimonials Section */}
-      <Testimonials/>
+      <Testimonials />
 
       {/* Final CTA Section */}
-      <CTA/>
+      <CTA />
     </div>
   );
 };

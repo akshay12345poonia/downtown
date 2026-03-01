@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { MapPin, Bed, Bath, Maximize, ArrowLeft, Heart, Share2, ShieldCheck, Mail, Phone, Calendar, User, CheckCircle2, Home } from 'lucide-react';
-import { getProperty, getProperties } from '../Services/Api';
+import { getProperty, getProperties, mediaUrl } from '../Services/Api';
 
 const PLACEHOLDER_IMG = 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&q=90';
 const AGENT_PLACEHOLDER = 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&q=80';
@@ -50,7 +50,7 @@ const PropertyDetail = () => {
         </div>
     );
 
-    const images = property.images?.length > 0 ? property.images : [PLACEHOLDER_IMG];
+    const images = property.images?.length > 0 ? property.images.map(img => mediaUrl(img)) : [PLACEHOLDER_IMG];
 
     return (
         <div className="bg-surface pb-24">
@@ -182,7 +182,7 @@ const PropertyDetail = () => {
 
                             <div className="flex items-center gap-4 p-4 bg-slate-50 rounded-2xl mb-10 group cursor-pointer" onClick={() => navigate(property.agent?._id ? `/agents/${property.agent._id}` : '/agents')}>
                                 <div className="w-16 h-16 rounded-xl overflow-hidden shadow-lg border-2 border-white group-hover:scale-105 transition-transform shrink-0">
-                                    <img src={property.agent?.photo || AGENT_PLACEHOLDER} className="w-full h-full object-cover" alt="Agent" />
+                                    <img src={mediaUrl(property.agent?.photo) || AGENT_PLACEHOLDER} className="w-full h-full object-cover" alt="Agent" />
                                 </div>
                                 <div>
                                     <h4 className="font-black text-text group-hover:text-brand transition-colors leading-tight mb-1">{property.agent?.name || 'Senior Consultant'}</h4>
@@ -247,7 +247,7 @@ const PropertyDetail = () => {
                         {similar.map(p => (
                             <div key={p._id} className="property-card cursor-pointer group" onClick={() => navigate(`/properties/${p._id}`)}>
                                 <div className="h-56 overflow-hidden relative">
-                                    <img src={p.images?.[0] || PLACEHOLDER_IMG} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                                    <img src={mediaUrl(p.images?.[0]) || PLACEHOLDER_IMG} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
                                     <div className="absolute top-4 left-4">
                                         <span className="badge badge-blue">For Sale</span>
                                     </div>

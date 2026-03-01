@@ -20,12 +20,18 @@ import Signin from './Pages/Signin'
 import Signup from './Pages/Register'
 import ForgotPassword from './Pages/ForgotPassword'
 import ResetPassword from './Pages/ResetPassword'
+import Profile from './Pages/Profile'
 import PageNotFound from './Pages/PageNotFound'
 
 import AdminLayout from './Pages/Admin/AdminLayout'
 import AdminDashboard from './Pages/Admin/AdminDashboard'
 import AdminProperties from './Pages/Admin/AdminProperties'
 import AdminAgents from './Pages/Admin/AdminAgents'
+import AdminUsers from './Pages/Admin/AdminUsers'
+
+import SellerLayout from './Pages/Seller/SellerLayout'
+import SellerDashboard from './Pages/Seller/SellerDashboard'
+import SellerProperties from './Pages/Seller/SellerProperties'
 
 
 const PublicLayout = ({ children }) => (
@@ -57,6 +63,23 @@ const App = () => {
         <Route path='/forgot-password' element={<ForgotPassword />} />
         <Route path='/reset-password/:token' element={<ResetPassword />} />
 
+        {/* Profile (any logged-in user) */}
+        <Route path='/profile' element={
+          <ProtectedRoute>
+            <PublicLayout><Profile /></PublicLayout>
+          </ProtectedRoute>
+        } />
+
+        {/* Seller routes */}
+        <Route path='/seller' element={
+          <ProtectedRoute sellerOnly>
+            <SellerLayout />
+          </ProtectedRoute>
+        }>
+          <Route index element={<SellerDashboard />} />
+          <Route path='properties' element={<SellerProperties />} />
+        </Route>
+
         {/* Admin routes */}
         <Route path='/admin' element={
           <ProtectedRoute adminOnly>
@@ -66,6 +89,7 @@ const App = () => {
           <Route index element={<AdminDashboard />} />
           <Route path='properties' element={<AdminProperties />} />
           <Route path='agents' element={<AdminAgents />} />
+          <Route path='users' element={<AdminUsers />} />
         </Route>
 
         <Route path='*' element={<PageNotFound />} />

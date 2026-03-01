@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Mail, Phone, MapPin, Award, Star, ArrowRight, Home, Users } from 'lucide-react';
-import { getAgents } from '../Services/Api';
+import { getAgents, mediaUrl } from '../Services/Api';
 
 const AGENT_PLACEHOLDER = 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&q=80';
 
@@ -9,7 +9,7 @@ const AgentCard = ({ agent, onClick }) => (
   <div className="card group cursor-pointer" onClick={onClick}>
     <div className="relative h-80 overflow-hidden">
       <img
-        src={agent.photo || AGENT_PLACEHOLDER}
+        src={mediaUrl(agent.photo) || AGENT_PLACEHOLDER}
         alt={agent.name}
         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
       />

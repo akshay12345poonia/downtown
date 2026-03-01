@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { Mail, Phone, MapPin, Star, ArrowLeft, MessageSquare, ShieldCheck, Award, Briefcase, GraduationCap } from 'lucide-react';
-import { getAgent, getProperties } from '../Services/Api';
+import { getAgent, getProperties, mediaUrl } from '../Services/Api';
 
 const AGENT_PLACEHOLDER = 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&q=80';
 const PLACEHOLDER_IMG = 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80';
@@ -63,7 +63,7 @@ const AgentDetail = () => {
                     </button>
                     <div className="flex flex-col md:flex-row md:items-end gap-8">
                         <div className="w-40 h-40 rounded-3xl overflow-hidden border-4 border-white/10 shadow-2xl shrink-0">
-                            <img src={agent.photo || AGENT_PLACEHOLDER} className="w-full h-full object-cover" alt={agent.name} />
+                            <img src={mediaUrl(agent.photo) || AGENT_PLACEHOLDER} className="w-full h-full object-cover" alt={agent.name} />
                         </div>
                         <div className="flex-1">
                             <h1 className="text-5xl font-black text-white mb-2">{agent.name}</h1>
@@ -169,7 +169,7 @@ const AgentDetail = () => {
                                 {agentProperties.map(prop => (
                                     <div key={prop._id} className="property-card group cursor-pointer shadow-sm shadow-brand/5" onClick={() => navigate(`/properties/${prop._id}`)}>
                                         <div className="h-44 overflow-hidden relative">
-                                            <img src={prop.images?.[0] || PLACEHOLDER_IMG} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                                            <img src={mediaUrl(prop.images?.[0]) || PLACEHOLDER_IMG} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
                                             <div className="absolute top-3 left-3">
                                                 <span className="badge badge-blue">For {prop.type === 'for-sale' ? 'Sale' : 'Rent'}</span>
                                             </div>

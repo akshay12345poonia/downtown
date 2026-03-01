@@ -2,8 +2,8 @@ import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../Context/AuthContext';
 
-const ProtectedRoute = ({ children, adminOnly = false }) => {
-    const { isLoggedIn, isAdmin, isAgent, loading } = useAuth();
+const ProtectedRoute = ({ children, adminOnly = false, sellerOnly = false }) => {
+    const { isLoggedIn, isAdmin, isAgent, isSeller, loading } = useAuth();
 
     if (loading) {
         return (
@@ -18,6 +18,10 @@ const ProtectedRoute = ({ children, adminOnly = false }) => {
     }
 
     if (adminOnly && !(isAdmin || isAgent)) {
+        return <Navigate to="/" replace />;
+    }
+
+    if (sellerOnly && !(isSeller || isAdmin)) {
         return <Navigate to="/" replace />;
     }
 

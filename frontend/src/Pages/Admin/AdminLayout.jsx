@@ -18,6 +18,7 @@ const AdminLayout = () => {
         { to: '/admin', icon: <LayoutDashboard size={20} />, label: 'Dashboard', end: true },
         { to: '/admin/properties', icon: <Building2 size={20} />, label: 'Properties' },
         { to: '/admin/agents', icon: <Users size={20} />, label: 'Agents' },
+        { to: '/admin/users', icon: <Settings size={20} />, label: 'Users' },
     ];
 
     const sidebarClass = `fixed top-0 left-0 h-full bg-text text-white/60 transition-all duration-300 z-50 flex flex-col ${collapsed ? 'w-20' : 'w-72'} ${mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`;

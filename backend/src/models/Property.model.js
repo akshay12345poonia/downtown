@@ -30,7 +30,7 @@ const propertySchema = new mongoose.Schema(
     },
     area: {
       type: Number,
-      default: 0 // square feet / meters based on your frontend
+      default: 0
     },
     images: [
       {
@@ -42,6 +42,24 @@ const propertySchema = new mongoose.Schema(
       enum: ['available', 'sold', 'rented'],
       default: 'available'
     },
+    type: {
+      type: String,
+      enum: ['for-sale', 'for-rent'],
+      default: 'for-sale'
+    },
+    propertyType: {
+      type: String,
+      enum: ['house', 'apartment', 'villa', 'land', 'commercial'],
+      default: 'house'
+    },
+    featured: {
+      type: Boolean,
+      default: false
+    },
+    agentId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Agent'
+    },
     listedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User'
@@ -51,4 +69,3 @@ const propertySchema = new mongoose.Schema(
 );
 
 module.exports = mongoose.model('Property', propertySchema);
-

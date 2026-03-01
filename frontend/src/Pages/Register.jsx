@@ -207,12 +207,11 @@ const Signup = () => {
             </div>
 
             <div className="pt-2">
-              <label className="form-label">I am a...</label>
-              <div className="grid grid-cols-3 gap-3">
+              <label className="form-label">I want to...</label>
+              <div className="grid grid-cols-2 gap-3">
                 {[
-                  { value: 'buyer', label: 'Buyer' },
-                  { value: 'agent', label: 'Agent' },
-                  { value: 'admin', label: 'Admin' },
+                  { value: 'buyer', label: '🏠 Buy / Rent Property' },
+                  { value: 'seller', label: '🏢 Sell / List Property' },
                 ].map((r) => (
                   <button
                     key={r.value}

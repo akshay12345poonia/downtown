@@ -203,3 +203,64 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
     token
   });
 });
+
+/* ==============================
+   GET ME (Profile)
+============================== */
+exports.getMe = catchAsync(async (req, res, next) => {
+  const user = await User.findById(req.user._id);
+  if (!user) return next(new AppError('User not found', 404));
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        phone: user.phone,
+        avatar: user.avatar
+      }
+    }
+  });
+});
+
+/* ==============================
+   UPDATE ME (Profile)
+============================== */
+exports.updateMe = catchAsync(async (req, res, next) => {
+  // Prevent password updates via this route
+  if (req.body.password) {
+    return next(new AppError('This route is not for password updates.', 400));
+  }
+
+  const updateFields = {};
+  if (req.body.name) updateFields.name = req.body.name;
+  if (req.body.phone) updateFields.phone = req.body.phone;
+  if (req.file) {
+    updateFields.avatar = `/uploads/${req.file.filename}`;
+  } else if (req.body.removeAvatar === 'true' || req.body.removeAvatar === true) {
+    updateFields.avatar = null;
+  }
+
+  const user = await User.findByIdAndUpdate(req.user._id, updateFields, {
+    new: true,
+    runValidators: true
+  });
+
+  res.status(200).json({
+    status: 'success',
+    message: 'Profile updated successfully',
+    data: {
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        phone: user.phone,
+        avatar: user.avatar
+      }
+    }
+  });
+});

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MapPin, Bed, Bath, Maximize, Search, SlidersHorizontal, X } from 'lucide-react';
-import { getProperties } from '../Services/Api';
+import { getProperties, mediaUrl } from '../Services/Api';
 
 const PLACEHOLDER_IMG = 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80';
 
@@ -15,7 +15,7 @@ const PropertyCard = ({ prop, onClick }) => (
   <div className="property-card cursor-pointer group" onClick={onClick}>
     <div className="relative overflow-hidden h-56">
       <img
-        src={prop.images?.[0] || PLACEHOLDER_IMG}
+        src={mediaUrl(prop.images?.[0]) || PLACEHOLDER_IMG}
         alt={prop.title}
         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
       />

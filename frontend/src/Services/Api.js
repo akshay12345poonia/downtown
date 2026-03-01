@@ -1,10 +1,11 @@
 import axios from 'axios';
 
+const BASE = 'http://localhost:5000';
+
 const api = axios.create({
-  baseURL: 'http://localhost:5000/api/v1',
+  baseURL: `${BASE}/api/v1`,
   headers: { 'Content-Type': 'application/json' }
 });
-
 
 // ============================
 // 🔐 Attach Token Automatically
@@ -16,7 +17,6 @@ api.interceptors.request.use((config) => {
   }
   return config;
 });
-
 
 // ============================
 // 🚨 Global 401 Handler
@@ -35,7 +35,15 @@ api.interceptors.response.use(
 
 export default api;
 
+// Helper: build public URL for uploaded files
+export const mediaUrl = (path) => {
+  if (!path) return null;
+  if (path.startsWith('http')) return path;
 
+  // Ensure we don't have double slashes if path starts with /
+  const cleanPath = path.startsWith('/') ? path : `/${path}`;
+  return `${BASE}${cleanPath}`;
+};
 
 // ======================================================
 // 🔐 AUTH
@@ -46,6 +54,12 @@ export const forgotPassword = (data) => api.post('/auth/forgotPassword', data);
 export const resetPassword = (token, data) =>
   api.patch(`/auth/resetPassword/${token}`, data);
 
+// Profile
+export const getMe = () => api.get('/auth/me');
+export const updateMe = (formData) =>
+  api.patch('/auth/updateMe', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  });
 
 
 // ======================================================
@@ -57,15 +71,18 @@ export const getProperties = (params) =>
 export const getProperty = (id) =>
   api.get(`/properties/${id}`);
 
-export const createProperty = (data) =>
-  api.post('/properties', data);
+export const createProperty = (formData) =>
+  api.post('/properties', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  });
 
-export const updateProperty = (id, data) =>
-  api.patch(`/properties/${id}`, data);
+export const updateProperty = (id, formData) =>
+  api.patch(`/properties/${id}`, formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  });
 
 export const deleteProperty = (id) =>
   api.delete(`/properties/${id}`);
-
 
 
 // ======================================================
@@ -77,15 +94,18 @@ export const getAgents = (params) =>
 export const getAgent = (id) =>
   api.get(`/agents/${id}`);
 
-export const createAgent = (data) =>
-  api.post('/agents', data);
+export const createAgent = (formData) =>
+  api.post('/agents', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  });
 
-export const updateAgent = (id, data) =>
-  api.patch(`/agents/${id}`, data);
+export const updateAgent = (id, formData) =>
+  api.patch(`/agents/${id}`, formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  });
 
 export const deleteAgent = (id) =>
   api.delete(`/agents/${id}`);
-
 
 
 // ======================================================
@@ -98,7 +118,6 @@ export const createTestimonial = (data) =>
   api.post('/testimonials', data);
 
 
-
 // ======================================================
 // 💼 CAREERS
 // ======================================================
@@ -109,7 +128,6 @@ export const applyCareer = (data) =>
   api.post('/careers', data);
 
 
-
 // ======================================================
 // 🏡 SELLING
 // ======================================================
@@ -117,13 +135,11 @@ export const getSelling = () =>
   api.get('/selling');
 
 
-
 // ======================================================
 // 🏘 BUYING
 // ======================================================
 export const getBuying = () =>
   api.get('/buying');
-
 
 
 // ======================================================
@@ -136,13 +152,11 @@ export const getMeetings = () =>
   api.get('/meetings');
 
 
-
 // ======================================================
 // 👥 TEAM
 // ======================================================
 export const getTeam = () =>
   api.get('/team');
-
 
 
 // ======================================================
@@ -152,7 +166,6 @@ export const getInvestors = () =>
   api.get('/investors');
 
 
-
 // ======================================================
 // 📩 CONTACT
 // ======================================================
@@ -160,9 +173,14 @@ export const sendContact = (data) =>
   api.post('/contacts', data);
 
 
-
 // ======================================================
 // 📊 ADMIN
 // ======================================================
 export const getAdminStats = () =>
   api.get('/admin/stats');
+
+export const getUsers = (params) =>
+  api.get('/admin/users', { params });
+
+export const updateUserRole = (id, role) =>
+  api.patch(`/admin/users/${id}/role`, { role });
