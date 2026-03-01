@@ -1,16 +1,27 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Mail, Lock, ArrowRight, Home, ShieldCheck, AlertCircle } from 'lucide-react';
+import {
+  Mail,
+  Lock,
+  ArrowRight,
+  Home,
+  ShieldCheck,
+  AlertCircle,
+  Eye,
+  EyeOff
+} from 'lucide-react';
 import { useAuth } from '../Context/AuthContext';
-import { login as loginApi } from '../Services/Api'; // ✅ rename to avoid conflict
+import { login as loginApi } from '../Services/Api';
+import logo from '../assets/logo.png';
 
 const Signin = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
-  const { login } = useAuth(); // context login
+  const { login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || '/';
@@ -21,18 +32,12 @@ const Signin = () => {
     setError('');
 
     try {
-      // ✅ Call API
       const res = await loginApi({ email, password });
-
-      // ✅ Assuming backend response:
-      // { status: "success", token, data: { user } }
 
       const token = res.data.token;
       const user = res.data.data.user;
 
-      // ✅ Call context login (token FIRST, user SECOND)
       login(token, user);
-
       navigate(from, { replace: true });
 
     } catch (err) {
@@ -46,7 +51,8 @@ const Signin = () => {
 
   return (
     <div className="min-h-screen bg-surface flex selection:bg-brand selection:text-white">
-      {/* Left Side */}
+
+      {/* LEFT SIDE */}
       <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-text">
         <div className="absolute inset-0 z-0 opacity-40">
           <img
@@ -59,12 +65,8 @@ const Signin = () => {
 
         <div className="relative z-10 w-full p-20 flex flex-col justify-between">
           <Link to="/" className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-surface rounded-2xl flex items-center justify-center shadow-2xl">
-              <Home size={24} className="text-brand" />
-            </div>
-            <span className="font-black text-3xl tracking-tighter text-white">
-              SilverBrick
-            </span>
+            <img src={logo} alt="SilverBrick Logo" className=" h-14 rounded-2xl shadow-2xl" />
+            
           </Link>
 
           <div>
@@ -85,9 +87,10 @@ const Signin = () => {
         </div>
       </div>
 
-      {/* Right Form */}
+      {/* RIGHT FORM */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8 md:p-16 lg:p-24 bg-white">
         <div className="w-full max-w-md">
+
           <div className="mb-10">
             <h1 className="text-3xl font-black text-text mb-3">Sign In</h1>
             <p className="text-text-muted">
@@ -103,13 +106,15 @@ const Signin = () => {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
+
+            {/* EMAIL */}
             <div>
               <label className="form-label">Email Address</label>
               <div className="input-group">
                 <Mail size={18} className="text-text-muted" />
                 <input
                   type="email"
-                  className="form-input ml-2"
+                  className="form-input ml-2 w-full"
                   placeholder="name@email.com"
                   required
                   value={email}
@@ -118,21 +123,39 @@ const Signin = () => {
               </div>
             </div>
 
+            {/* PASSWORD */}
             <div>
               <label className="form-label">Password</label>
-              <div className="input-group">
+              <div className="input-group relative">
                 <Lock size={18} className="text-text-muted" />
                 <input
-                  type="password"
-                  className="form-input ml-2"
+                  type={showPassword ? "text" : "password"}
+                  className="form-input ml-2 w-full pr-10"
                   placeholder="••••••••"
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
+                <div
+                  className="absolute right-3 cursor-pointer text-text-muted"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </div>
+              </div>
+
+              {/* FORGOT PASSWORD */}
+              <div className="flex justify-end mt-2">
+                <Link
+                  to="/forgot-password"
+                  className="text-sm text-brand font-semibold hover:underline"
+                >
+                  Forgot Password?
+                </Link>
               </div>
             </div>
 
+            {/* SUBMIT BUTTON */}
             <button
               type="submit"
               className="btn btn-primary w-full py-4 text-base shadow-xl"
@@ -144,7 +167,20 @@ const Signin = () => {
                 <>Sign In <ArrowRight size={18} /></>
               )}
             </button>
+
           </form>
+
+          {/* SIGNUP LINK */}
+          <div className="mt-8 text-center text-sm text-text-muted">
+            Don’t have an account?{" "}
+            <Link
+              to="/signup"
+              className="text-brand font-bold hover:underline"
+            >
+              Create New Account
+            </Link>
+          </div>
+
         </div>
       </div>
     </div>

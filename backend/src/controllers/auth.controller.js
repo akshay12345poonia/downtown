@@ -1,129 +1,107 @@
 const User = require('../models/User.model');
 const jwt = require('jsonwebtoken');
-const crypto = require('crypto');           // ← New
+const crypto = require('crypto');
 const bcrypt = require('bcrypt');
+const nodemailer = require('nodemailer');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/AppError');
 
+/* ==============================
+   TOKEN SIGN
+============================== */
 const signToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '30d' });
+  return jwt.sign({ id }, process.env.JWT_SECRET, {
+    expiresIn: '30d'
+  });
 };
 
+/* ==============================
+   EMAIL TRANSPORTER
+============================== */
+const sendEmail = async (options) => {
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS
+    }
+  });
+
+  const mailOptions = {
+    from: `"SilverBrick" <${process.env.EMAIL_USER}>`,
+    to: options.email,
+    subject: options.subject,
+    html: options.html
+  };
+
+  await transporter.sendMail(mailOptions);
+};
+
+/* ==============================
+   SIGNUP
+============================== */
 exports.signup = catchAsync(async (req, res, next) => {
   const { name, email, password, role, phone } = req.body;
 
-  // #region agent log
-  fetch('http://127.0.0.1:7703/ingest/2a871325-0a09-47bd-89e5-21453baa7783', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-Debug-Session-Id': '2c712a'
-    },
-    body: JSON.stringify({
-      sessionId: '2c712a',
-      runId: 'initial',
-      hypothesisId: 'H1_H3_H4',
-      location: 'auth.controller.js:signup:entry',
-      message: 'Signup called',
-      data: {
-        hasBody: !!req.body,
-        hasEmail: !!email,
-        hasPassword: !!password,
-        role: role || null
-      },
-      timestamp: Date.now()
-    })
-  }).catch(() => { });
-  // #endregion
-
   const existingUser = await User.findOne({ email });
-  if (existingUser) return next(new AppError('Email already registered', 400));
+  if (existingUser)
+    return next(new AppError('Email already registered', 400));
 
-  const user = await User.create({ name, email, password, role, phone });
-
-  // #region agent log
-  fetch('http://127.0.0.1:7703/ingest/2a871325-0a09-47bd-89e5-21453baa7783', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-Debug-Session-Id': '2c712a'
-    },
-    body: JSON.stringify({
-      sessionId: '2c712a',
-      runId: 'initial',
-      hypothesisId: 'H1',
-      location: 'auth.controller.js:signup:postCreate',
-      message: 'User created in signup',
-      data: {
-        userId: String(user._id),
-        email: user.email
-      },
-      timestamp: Date.now()
-    })
-  }).catch(() => { });
-  // #endregion
+  const user = await User.create({
+    name,
+    email,
+    password,
+    role,
+    phone
+  });
 
   const token = signToken(user._id);
+
+  /* ===== Welcome Email ===== */
+  await sendEmail({
+    email: user.email,
+    subject: 'Welcome to SilverBrick 🏡',
+    html: `
+      <h2>Welcome to SilverBrick, ${user.name} 👋</h2>
+      <p>We’re excited to have you on board!</p>
+      <p>SilverBrick helps you find premium properties with trust and transparency.</p>
+      <br/>
+      <p><b>Your Account Details:</b></p>
+      <p>Email: ${user.email}</p>
+      <br/>
+      <p>If you did not create this account, please contact support immediately.</p>
+      <br/>
+      <p>Regards,<br/>SilverBrick Team</p>
+    `
+  });
 
   res.status(201).json({
     status: 'success',
     message: 'Account created successfully',
     token,
-    data: { user: { id: user._id, name: user.name, email: user.email, role: user.role, phone: user.phone } }
+    data: {
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        phone: user.phone
+      }
+    }
   });
 });
 
+/* ==============================
+   LOGIN
+============================== */
 exports.login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
 
-  // #region agent log
-  fetch('http://127.0.0.1:7703/ingest/2a871325-0a09-47bd-89e5-21453baa7783', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-Debug-Session-Id': '2c712a'
-    },
-    body: JSON.stringify({
-      sessionId: '2c712a',
-      runId: 'initial',
-      hypothesisId: 'H2_H3',
-      location: 'auth.controller.js:login:entry',
-      message: 'Login called',
-      data: {
-        hasBody: !!req.body,
-        hasEmail: !!email,
-        hasPassword: !!password
-      },
-      timestamp: Date.now()
-    })
-  }).catch(() => { });
-  // #endregion
-
-  if (!email || !password) return next(new AppError('Please provide email and password', 400));
+  if (!email || !password)
+    return next(new AppError('Please provide email and password', 400));
 
   const user = await User.findOne({ email }).select('+password');
 
-  // #region agent log
-  fetch('http://127.0.0.1:7703/ingest/2a871325-0a09-47bd-89e5-21453baa7783', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-Debug-Session-Id': '2c712a'
-    },
-    body: JSON.stringify({
-      sessionId: '2c712a',
-      runId: 'initial',
-      hypothesisId: 'H2',
-      location: 'auth.controller.js:login:postFindUser',
-      message: 'User lookup in login',
-      data: {
-        foundUser: !!user,
-        emailSearched: email
-      },
-      timestamp: Date.now()
-    })
-  }).catch(() => { });
-  // #endregion
   if (!user || !(await bcrypt.compare(password, user.password))) {
     return next(new AppError('Incorrect email or password', 401));
   }
@@ -134,49 +112,87 @@ exports.login = catchAsync(async (req, res, next) => {
     status: 'success',
     message: 'Login successful',
     token,
-    data: { user: { id: user._id, name: user.name, email: user.email, role: user.role, phone: user.phone } }
+    data: {
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        phone: user.phone
+      }
+    }
   });
 });
 
-// 🔥 New: Forgot Password
+/* ==============================
+   FORGOT PASSWORD
+============================== */
 exports.forgotPassword = catchAsync(async (req, res, next) => {
   const user = await User.findOne({ email: req.body.email });
-  if (!user) return next(new AppError('No user found with this email', 404));
 
-  // Generate reset token
+  if (!user)
+    return next(new AppError('No user found with this email', 404));
+
   const resetToken = crypto.randomBytes(32).toString('hex');
-  const hashedToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+  const hashedToken = crypto
+    .createHash('sha256')
+    .update(resetToken)
+    .digest('hex');
 
   user.resetPasswordToken = hashedToken;
-  user.resetPasswordExpire = Date.now() + 10 * 60 * 1000; // 10 minutes
+  user.resetPasswordExpire = Date.now() + 10 * 60 * 1000; // 10 min
+
   await user.save({ validateBeforeSave: false });
+  const resetURL = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/reset-password/${resetToken}`;
 
-  // Reset URL (change frontend URL later)
-  const resetURL = `${req.protocol}://${req.get('host')}/api/v1/auth/resetPassword/${resetToken}`;
-
-  console.log(`🔗 Password Reset Link (copy-paste in browser): ${resetURL}`);
+  /* ===== Forgot Password Email ===== */
+  await sendEmail({
+    email: user.email,
+    subject: 'SilverBrick Password Reset 🔐',
+    html: `
+      <h2>Password Reset Request</h2>
+      <p>Hello ${user.name},</p>
+      <p>We received a request to reset your SilverBrick account password.</p>
+      <br/>
+      <p>Click the link below to reset your password:</p>
+      <a href="${resetURL}" style="background:#111;color:#fff;padding:10px 15px;text-decoration:none;border-radius:5px;">
+        Reset Password
+      </a>
+      <br/><br/>
+      <p>This link will expire in 10 minutes.</p>
+      <p>If you did not request this, please ignore this email.</p>
+      <br/>
+      <p>Regards,<br/>SilverBrick Team</p>
+    `
+  });
 
   res.status(200).json({
     status: 'success',
-    message: 'Password reset link has been sent (check console for testing)'
+    message: 'Password reset link sent to email'
   });
 });
 
-// 🔥 New: Reset Password
+/* ==============================
+   RESET PASSWORD
+============================== */
 exports.resetPassword = catchAsync(async (req, res, next) => {
-  const hashedToken = crypto.createHash('sha256').update(req.params.token).digest('hex');
+  const hashedToken = crypto
+    .createHash('sha256')
+    .update(req.params.token)
+    .digest('hex');
 
   const user = await User.findOne({
     resetPasswordToken: hashedToken,
     resetPasswordExpire: { $gt: Date.now() }
   });
 
-  if (!user) return next(new AppError('Token is invalid or has expired', 400));
+  if (!user)
+    return next(new AppError('Token is invalid or expired', 400));
 
-  // Update password
   user.password = req.body.password;
   user.resetPasswordToken = undefined;
   user.resetPasswordExpire = undefined;
+
   await user.save();
 
   const token = signToken(user._id);

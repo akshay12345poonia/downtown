@@ -22,7 +22,7 @@ const Footer = () => {
 
         {/* Brand */}
         <div>
-          <img src={logo} alt="SilverBrick" className="h-11 mb-5" />
+          <img src={logo} alt="SilverBrick" className="h-14 mb-5 rounded-2xl shadow-md transition-all duration-300 hover:scale-105" />
           <p className="text-sm leading-relaxed text-gray-400">
             SilverBrick is a trusted real estate platform helping you buy,
             sell, and invest in premium properties with complete confidence.

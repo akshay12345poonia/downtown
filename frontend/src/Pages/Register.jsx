@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { User, Mail, Lock, Phone, ArrowRight, Home, CheckCircle2, AlertCircle } from 'lucide-react';
 import { signup } from '../Services/Api';
+import logo from '../assets/logo.png';
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -64,10 +65,8 @@ const Signup = () => {
 
         <div className="relative z-10 w-full p-20 flex flex-col justify-between">
           <Link to="/" className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-2xl">
-              <Home size={24} className="text-brand" />
-            </div>
-            <span className="font-black text-3xl tracking-tighter text-white">SilverBrick</span>
+            <img src={logo} alt="SilverBrick Logo" className=" h-14 rounded-2xl shadow-2xl" />
+
           </Link>
 
           <div>

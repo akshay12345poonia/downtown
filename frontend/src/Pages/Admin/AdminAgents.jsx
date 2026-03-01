@@ -168,7 +168,7 @@ const AdminAgents = () => {
         setEditAgent(agent);
     };
 
-    const PLACEHOLDER = 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&q=80';
+    const PLACEHOLDER = 'https://cdn.pixabay.com/photo/2024/05/26/11/33/business-8788604_1280.jpg';
 
     return (
         <div className="animate-fadeUp">

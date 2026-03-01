@@ -19,12 +19,14 @@ import FAQ from './Pages/FAQ'
 import Signin from './Pages/Signin'
 import Signup from './Pages/Register'
 import ForgotPassword from './Pages/ForgotPassword'
+import ResetPassword from './Pages/ResetPassword'
 import PageNotFound from './Pages/PageNotFound'
 
 import AdminLayout from './Pages/Admin/AdminLayout'
 import AdminDashboard from './Pages/Admin/AdminDashboard'
 import AdminProperties from './Pages/Admin/AdminProperties'
 import AdminAgents from './Pages/Admin/AdminAgents'
+
 
 const PublicLayout = ({ children }) => (
   <>
@@ -52,7 +54,8 @@ const App = () => {
         {/* Auth routes */}
         <Route path='/signin' element={<Signin />} />
         <Route path='/signup' element={<Signup />} />
-        <Route path='/forgotpassword' element={<ForgotPassword />} />
+        <Route path='/forgot-password' element={<ForgotPassword />} />
+        <Route path='/reset-password/:token' element={<ResetPassword />} />
 
         {/* Admin routes */}
         <Route path='/admin' element={

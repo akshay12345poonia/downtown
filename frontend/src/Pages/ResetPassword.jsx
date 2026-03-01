@@ -1,7 +1,39 @@
-import React from "react";
+import React, { useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { FaLock, FaShieldAlt } from "react-icons/fa";
+import { resetPassword as resetPasswordApi } from "../Services/Api";
+import { toast } from "react-hot-toast";
 
 const ResetPassword = () => {
+  const { token } = useParams();
+  const navigate = useNavigate();
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (password !== confirmPassword) {
+      return toast.error("Passwords do not match");
+    }
+
+    if (password.length < 8) {
+      return toast.error("Password must be at least 8 characters long");
+    }
+
+    setLoading(true);
+    try {
+      await resetPasswordApi(token, { password });
+      toast.success("Password reset successful! Please login.");
+      setTimeout(() => navigate("/signin"), 2000);
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
       <div className="w-full max-w-lg bg-white rounded-2xl shadow-xl p-8 sm:p-10">
@@ -22,13 +54,16 @@ const ResetPassword = () => {
         </div>
 
         {/* Form */}
-        <form className="mt-8 space-y-5">
+        <form className="mt-8 space-y-5" onSubmit={handleSubmit}>
           <div className="relative">
             <FaLock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm" />
             <input
               type="password"
               placeholder="New password"
               className="w-full pl-11 pr-4 py-3 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
           </div>
 
@@ -38,14 +73,18 @@ const ResetPassword = () => {
               type="password"
               placeholder="Confirm new password"
               className="w-full pl-11 pr-4 py-3 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
             />
           </div>
 
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition"
+            className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition disabled:opacity-50"
+            disabled={loading}
           >
-            Update Password
+            {loading ? "Updating..." : "Update Password"}
           </button>
         </form>
 

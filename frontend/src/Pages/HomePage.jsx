@@ -2,9 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MapPin, Bed, Bath, Maximize, ArrowRight, Star, TrendingUp, Home, Users, Award } from 'lucide-react';
 import { getProperties, getAgents } from '../Services/Api';
+import SilverBrickAdvantage from '../Components/SilverBrickAdvantage';
+import Testimonials from '../Components/Testimonials';
+import CTA from '../Components/CTA';
 
 const PLACEHOLDER_IMG = 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80';
-const AGENT_PLACEHOLDER = 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&q=80';
+const AGENT_PLACEHOLDER = 'https://cdn.pixabay.com/photo/2024/05/26/11/33/business-8788604_1280.jpg';
 
 const formatPrice = (price) => {
   if (price >= 10000000) return `₹${(price / 10000000).toFixed(1)}Cr`;
@@ -86,36 +89,7 @@ const AgentCard = ({ agent, onClick }) => (
   </div>
 );
 
-const TestimonialCard = ({ name, role, text, rating }) => (
-  <div className="card p-8 flex flex-col items-center text-center">
-    <div className="flex gap-1 mb-6">
-      {[...Array(5)].map((_, i) => (
-        <Star
-          key={i}
-          size={18}
-          fill={i < rating ? "var(--color-accent)" : "none"}
-          color={i < rating ? "var(--color-accent)" : "var(--color-border)"}
-        />
-      ))}
-    </div>
-    <p className="text-text-muted text-base leading-relaxed italic mb-8">"{text}"</p>
-    <div className="flex items-center gap-4">
-      <div className="w-12 h-12 rounded-full bg-gradient-to-br from-brand to-brand-dark flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-brand/20">
-        {name[0]}
-      </div>
-      <div className="text-left">
-        <div className="font-bold text-text">{name}</div>
-        <div className="text-xs text-text-muted uppercase tracking-widest">{role}</div>
-      </div>
-    </div>
-  </div>
-);
 
-const TESTIMONIALS = [
-  { name: 'Rahul Sharma', role: 'Home Buyer', text: 'SilverBrick made finding our dream home effortless. The agents were professional and guided us every step of the way.', rating: 5 },
-  { name: 'Priya Mehta', role: 'Property Investor', text: 'I have invested in three properties through this platform. Excellent service, transparent dealings, and great returns.', rating: 5 },
-  { name: 'Amit Verma', role: 'First-Time Buyer', text: 'As a first-time buyer, I was nervous. The team made the entire process smooth and stress-free. Highly recommend!', rating: 5 },
-];
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -226,33 +200,7 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* Core Values Section */}
-      <section className="section bg-surface-muted">
-        <div className="max-w-7xl mx-auto container">
-          <div className="text-center mb-16">
-            <span className="section-tag">Why Choose Us</span>
-            <h2 className="section-title mx-auto">The SilverBrick Advantage</h2>
-            <p className="section-subtitle mx-auto">Setting the standard in real estate through innovation, transparency, and results.</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              { icon: "🏆", title: 'Market Leadership', desc: 'Recognized as the industry leader for luxury real estate across the region.' },
-              { icon: '🔒', title: 'Absolute Security', desc: 'Every listing undergoes a rigorous 40-point verification process for your peace of mind.' },
-              { icon: '💼', title: 'Consultative Approach', desc: 'Our agents act as advisors, prioritizing your goals and investment long-term.' },
-              { icon: '📊', title: 'Data-Driven Insights', desc: 'Harnessing real-time market data to ensure you make informed property decisions.' },
-              { icon: '🤝', title: 'Integrity First', desc: 'Transparent communication and ethical practices define every interaction we have.' },
-              { icon: '📱', title: 'Smart Ecosystem', desc: 'Seamlessly search, tour, and manage your property journey via our digital platform.' },
-            ].map((f, i) => (
-              <div key={i} className="bg-surface p-10 rounded-2xl border border-border/40 shadow-sm hover:shadow-xl hover:shadow-brand/5 transition-all duration-300">
-                <div className="text-5xl mb-6">{f.icon}</div>
-                <h3 className="text-xl font-bold text-text mb-3">{f.title}</h3>
-                <p className="text-text-muted leading-relaxed">{f.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <SilverBrickAdvantage/>
 
       {/* Agents Section */}
       <section className="section bg-white">
@@ -285,50 +233,10 @@ const HomePage = () => {
       </section>
 
       {/* Testimonials Section */}
-      <section className="section bg-brand-light/50">
-        <div className="max-w-7xl mx-auto container">
-          <div className="text-center mb-16">
-            <span className="section-tag">Testimonials</span>
-            <h2 className="section-title mx-auto">Words From Our Clients</h2>
-          </div>
-          <div className="grid-3">
-            {TESTIMONIALS.map((t, i) => <TestimonialCard key={i} {...t} />)}
-          </div>
-        </div>
-      </section>
+      <Testimonials/>
 
       {/* Final CTA Section */}
-      <section className="relative py-24 px-6 overflow-hidden">
-        <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-brand/95" />
-          <img
-            src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1600&q=80"
-            className="w-full h-full object-cover mix-blend-overlay opacity-20"
-            alt="Office"
-          />
-        </div>
-
-        <div className="relative z-10 max-w-5xl mx-auto text-center">
-          <h2 className="text-4xl md:text-6xl font-black text-white mb-8">
-            Begin Your Legacy <br />
-            <span className="text-accent underline decoration-accent/30 decoration-8 underline-offset-8">Starts Right Here</span>
-          </h2>
-          <p className="text-xl text-white/80 mb-12 max-w-2xl mx-auto leading-relaxed">
-            Whether you're looking for a family home, a high-yield investment, or your next commercial venture, let SilverBrick be your guide.
-          </p>
-          <div className="flex flex-wrap justify-center gap-6">
-            <button className="btn btn-gold btn-lg" onClick={() => navigate('/properties')}>
-              View Current Listings <ArrowRight size={20} />
-            </button>
-            <button
-              className="btn bg-white/10 hover:bg-white/20 text-white border border-white/30 btn-lg backdrop-blur-md"
-              onClick={() => navigate('/contact')}
-            >
-              Get In Touch
-            </button>
-          </div>
-        </div>
-      </section>
+      <CTA/>
     </div>
   );
 };
